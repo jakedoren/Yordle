@@ -1,14 +1,14 @@
 const keyBoard = <HTMLElement> document.getElementById('keyboard')
 const errorDiv = <HTMLElement> document.getElementById('error')
 
-const row1: Array<String> = [];
-const row2: Array<String> = [];
-const row3: Array<String> = [];
-const row4: Array<String> = [];
-const row5: Array<String> = [];
-const row6: Array<String> = [];
+const row1: string[] = [];
+const row2: string[] = [];
+const row3: string[] = [];
+const row4: string[] = [];
+const row5: string[] = [];
+const row6: string[] = [];
 
-const rowsArray: Array<Array<String>> = [row1, row2, row3, row4, row5, row6]
+const rowsArray: Array<Array<string>> = [row1, row2, row3, row4, row5, row6]
 
 class gameState {
     private attempt: number
@@ -31,16 +31,16 @@ class gameState {
         this.attempt = attempt
     }
 
-    incrementAttempt() {
+    incrementAttempt(): void {
         this.attempt += 1
     }
 
-    resetError() {
+    resetError(): void {
         this.error = undefined
         errorDiv.innerHTML = ''
     }
 
-    setError(error: string) {
+    setError(error: string): void {
         this.error = error
         errorDiv.innerHTML = error
         setInterval(() => {
@@ -48,17 +48,17 @@ class gameState {
         }, 5000)
     }
 
-    gameEnd() {
+    gameEnd(): void {
         console.log("Game over")
     }
 
 }
 
 const submitAttemptBtn = <HTMLElement> document.getElementById('enter')
-const currentGameState = new gameState(0)
+const currentGameState: gameState = new gameState(0)
 
-const mapCharToRowArray = (char: string, arrayIndex: number) => {
-    const currentRow = rowsArray[currentGameState.getAttempt()]
+const mapCharToRowArray = (char: string): void => {
+    const currentRow: string[] = rowsArray[currentGameState.getAttempt()]
     if(currentRow.length < 5) {
         currentRow.push(char)
     } else {
@@ -66,29 +66,35 @@ const mapCharToRowArray = (char: string, arrayIndex: number) => {
     }
 }
 
-const mapHtmlToWordInput = () => {
+const mapHtmlToWordInput = (): void => {
     const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
-    const childDivs = wordRowContainer.getElementsByTagName('div')
-    const currentRow = rowsArray[currentGameState.getAttempt()]
-    const child = childDivs[currentRow.length - 1]
+    const childDivs: HTMLCollectionOf<HTMLDivElement> = wordRowContainer.getElementsByTagName('div')
+    const currentRow: string[] = rowsArray[currentGameState.getAttempt()]
+    const child: HTMLDivElement = childDivs[currentRow.length - 1]
     child.innerHTML = currentRow[currentRow.length - 1].valueOf()
 }
 
 submitAttemptBtn?.addEventListener("click", (e) => {
     e.preventDefault()
-    const currentAttempt = currentGameState.getAttempt() 
-    currentAttempt < 6 ? currentGameState.incrementAttempt() : currentGameState.gameEnd()
+    const currentAttempt: number = currentGameState.getAttempt() 
+    const currentRow: string[] = rowsArray[currentGameState.getAttempt()]
+    if(currentAttempt < 5 && currentRow.length === 5) {
+        currentGameState.incrementAttempt()
+    } else if(currentAttempt === 5) {
+        currentGameState.gameEnd()
+    } else {
+        currentGameState.setError("Must enter a five letter word before continuing towards your next guess")
+    }
 })
 
-const keyElements = keyBoard?.getElementsByTagName('span')
+const keyElements: HTMLCollectionOf<HTMLSpanElement> = keyBoard?.getElementsByTagName('span')
 if(keyElements && keyElements?.length) {
     for(let i = 0; i < keyElements?.length; i++) {
-        const key = keyElements[i]
-        key.addEventListener("click", (e) => {
+        const keyElement: HTMLSpanElement = keyElements[i]
+        keyElement.addEventListener("click", (e) => {
             const element = <HTMLElement> e.target
-            const key = element.innerHTML
-            const currentGameIndex = 0
-            mapCharToRowArray(key, currentGameIndex)
+            const key: string = element.innerHTML
+            mapCharToRowArray(key)
             mapHtmlToWordInput()
         })
     }
