@@ -35,7 +35,7 @@ class gameState {
         this.attempt += 1
     }
 
-    resetError(): void {
+    private resetError(): void {
         this.error = undefined
         errorDiv.innerHTML = ''
     }
@@ -55,10 +55,10 @@ class gameState {
 }
 
 const submitAttemptBtn = <HTMLElement> document.getElementById('enter')
-const currentGameState: gameState = new gameState(0)
+const currentGameState = new gameState(0)
 
 const mapCharToRowArray = (char: string): void => {
-    const currentRow: string[] = rowsArray[currentGameState.getAttempt()]
+    const currentRow = rowsArray[currentGameState.getAttempt()]
     if(currentRow.length < 5) {
         currentRow.push(char)
     } else {
@@ -68,16 +68,16 @@ const mapCharToRowArray = (char: string): void => {
 
 const mapHtmlToWordInput = (): void => {
     const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
-    const childDivs: HTMLCollectionOf<HTMLDivElement> = wordRowContainer.getElementsByTagName('div')
-    const currentRow: string[] = rowsArray[currentGameState.getAttempt()]
-    const child: HTMLDivElement = childDivs[currentRow.length - 1]
+    const childDivs = wordRowContainer.getElementsByTagName('div')
+    const currentRow = rowsArray[currentGameState.getAttempt()]
+    const child = childDivs[currentRow.length - 1]
     child.innerHTML = currentRow[currentRow.length - 1].valueOf()
 }
 
 submitAttemptBtn?.addEventListener("click", (e) => {
     e.preventDefault()
-    const currentAttempt: number = currentGameState.getAttempt() 
-    const currentRow: string[] = rowsArray[currentGameState.getAttempt()]
+    const currentAttempt = currentGameState.getAttempt() 
+    const currentRow = rowsArray[currentGameState.getAttempt()]
     if(currentAttempt < 5 && currentRow.length === 5) {
         currentGameState.incrementAttempt()
     } else if(currentAttempt === 5) {
@@ -87,13 +87,13 @@ submitAttemptBtn?.addEventListener("click", (e) => {
     }
 })
 
-const keyElements: HTMLCollectionOf<HTMLSpanElement> = keyBoard?.getElementsByTagName('span')
+const keyElements = keyBoard?.getElementsByTagName('span')
 if(keyElements && keyElements?.length) {
     for(let i = 0; i < keyElements?.length; i++) {
-        const keyElement: HTMLSpanElement = keyElements[i]
+        const keyElement = keyElements[i]
         keyElement.addEventListener("click", (e) => {
             const element = <HTMLElement> e.target
-            const key: string = element.innerHTML
+            const key = element.innerHTML
             mapCharToRowArray(key)
             mapHtmlToWordInput()
         })
