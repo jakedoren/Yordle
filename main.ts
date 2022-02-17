@@ -35,7 +35,7 @@ class gameState {
         this.attempt += 1
     }
 
-    private resetError(): void {
+    resetError(): void {
         this.error = undefined
         errorDiv.innerHTML = ''
     }
