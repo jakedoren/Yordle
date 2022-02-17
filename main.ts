@@ -11,8 +11,8 @@ const row6: Array<String> = [];
 const rowsArray: Array<Array<String>> = [row1, row2, row3, row4, row5, row6]
 
 class gameState {
-    attempt: number
-    error: string | undefined
+    private attempt: number
+    private error: string | undefined
 
     constructor(attempt: number, error?: string) {
         this.attempt = attempt
@@ -32,12 +32,24 @@ class gameState {
     }
 
     incrementAttempt() {
-        this.attempt + 1
+        this.attempt += 1
+    }
+
+    resetError() {
+        this.error = undefined
+        errorDiv.innerHTML = ''
     }
 
     setError(error: string) {
         this.error = error
         errorDiv.innerHTML = error
+        setInterval(() => {
+            this.resetError()
+        }, 5000)
+    }
+
+    gameEnd() {
+        console.log("Game over")
     }
 
 }
@@ -46,7 +58,7 @@ const submitAttemptBtn = <HTMLElement> document.getElementById('enter')
 const currentGameState = new gameState(0)
 
 const mapCharToRowArray = (char: string, arrayIndex: number) => {
-    const currentRow = rowsArray[arrayIndex]
+    const currentRow = rowsArray[currentGameState.getAttempt()]
     if(currentRow.length < 5) {
         currentRow.push(char)
         console.log(rowsArray[arrayIndex])
@@ -58,16 +70,18 @@ const mapCharToRowArray = (char: string, arrayIndex: number) => {
 const mapHtmlToWordInput = () => {
     const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
     const childDivs = wordRowContainer.getElementsByTagName('div')
-    for(let i =0; i < childDivs.length; i++) {
-        const child = childDivs[i]
-        const currentRow = rowsArray[currentGameState.getAttempt()]
-        child.innerHTML = currentRow[i].toString()
-    }
+    const currentRow = rowsArray[currentGameState.getAttempt()]
+    console.log(currentRow)
+    const child = childDivs[currentRow.length - 1]
+    child.innerHTML = currentRow[currentRow.length - 1].valueOf()
 }
 
 submitAttemptBtn?.addEventListener("click", (e) => {
     e.preventDefault()
-    currentGameState.incrementAttempt()
+    console.log(rowsArray)
+    const currentAttempt = currentGameState.getAttempt() 
+    currentAttempt < 6 ? currentGameState.incrementAttempt() : currentGameState.gameEnd()
+    console.log(currentGameState.getAttempt())
 })
 
 const keyElements = keyBoard?.getElementsByTagName('span')
