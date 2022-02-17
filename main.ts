@@ -1,4 +1,4 @@
-const keyBoard = document.getElementById('keyboard')
+const keyBoard = <HTMLElement> document.getElementById('keyboard')
 const errorDiv = <HTMLElement> document.getElementById('error')
 
 const row1: Array<String> = [];
@@ -61,7 +61,6 @@ const mapCharToRowArray = (char: string, arrayIndex: number) => {
     const currentRow = rowsArray[currentGameState.getAttempt()]
     if(currentRow.length < 5) {
         currentRow.push(char)
-        console.log(rowsArray[arrayIndex])
     } else {
         currentGameState.setError("The word must not be longer than 5 characters")
     }
@@ -71,17 +70,14 @@ const mapHtmlToWordInput = () => {
     const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
     const childDivs = wordRowContainer.getElementsByTagName('div')
     const currentRow = rowsArray[currentGameState.getAttempt()]
-    console.log(currentRow)
     const child = childDivs[currentRow.length - 1]
     child.innerHTML = currentRow[currentRow.length - 1].valueOf()
 }
 
 submitAttemptBtn?.addEventListener("click", (e) => {
     e.preventDefault()
-    console.log(rowsArray)
     const currentAttempt = currentGameState.getAttempt() 
     currentAttempt < 6 ? currentGameState.incrementAttempt() : currentGameState.gameEnd()
-    console.log(currentGameState.getAttempt())
 })
 
 const keyElements = keyBoard?.getElementsByTagName('span')
@@ -91,7 +87,6 @@ if(keyElements && keyElements?.length) {
         key.addEventListener("click", (e) => {
             const element = <HTMLElement> e.target
             const key = element.innerHTML
-            console.log(key)
             const currentGameIndex = 0
             mapCharToRowArray(key, currentGameIndex)
             mapHtmlToWordInput()
