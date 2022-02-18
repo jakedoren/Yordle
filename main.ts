@@ -67,12 +67,13 @@ const currentGameState = new gameState(0, wordsArray[0])
 
 const validateSubmission = (): void => {
     const currentRow = rowsArray[currentGameState.getAttempt()]
+    const wordOfTheDay = currentGameState.getWordOfTheDay()
     let guess = '';
     const currentAttempt = currentGameState.getAttempt()
     currentRow.map((letter) => {
         guess = guess + letter
     })
-    if(currentAttempt <= 6 && guess === currentGameState.getWordOfTheDay()) {
+    if(currentAttempt <= 5 && guess === wordOfTheDay) {
         console.log("winner!")
     } else if(currentAttempt < 6){
         console.log("nope, try again")
