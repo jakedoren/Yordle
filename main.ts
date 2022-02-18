@@ -65,6 +65,40 @@ class gameState {
 const submitAttemptBtn = <HTMLElement> document.getElementById('enter')
 const currentGameState = new gameState(0, wordsArray[0])
 
+const guessContainingChar = (): void => {
+    const currentRow = rowsArray[currentGameState.getAttempt()]
+    const wordOfTheDay = currentGameState.getWordOfTheDay()
+    let matchedLetters: string[] = [];
+    currentRow.forEach((letter) => {
+        if(wordOfTheDay.includes(letter)) {
+            matchedLetters.push(letter)
+        }
+    })
+    if(matchedLetters.length > 0) {
+        matchedLetters.forEach((letter) => {
+            let exactMatchIndexes: number[] = []
+            let partialMatchIndexes: number[] = []
+            for(let i = 0; i < currentRow.length; i++) {
+                if(currentRow[i] == letter && wordOfTheDay[i] == letter) {
+                    exactMatchIndexes.push(i)
+                } else if(currentRow[i] == letter && wordOfTheDay[i] !== letter){
+                    partialMatchIndexes.push(i)
+                }
+            }
+            const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
+            const childDivs = wordRowContainer.getElementsByTagName('div')
+            partialMatchIndexes.forEach((partialMatch) => {
+                const child = childDivs[partialMatch]
+                child.classList.add("yellow")
+            })
+            exactMatchIndexes.forEach((exactMatch) => {
+                const child = childDivs[exactMatch]
+                child.classList.add("green")
+            })
+        })
+    }
+}
+
 const validateSubmission = (): void => {
     const currentRow = rowsArray[currentGameState.getAttempt()]
     const wordOfTheDay = currentGameState.getWordOfTheDay()
@@ -73,6 +107,7 @@ const validateSubmission = (): void => {
     currentRow.map((letter) => {
         guess = guess + letter
     })
+    guessContainingChar()
     if(currentAttempt <= 5 && guess === wordOfTheDay) {
         console.log("winner!")
     } else if(currentAttempt < 6){
