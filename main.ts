@@ -176,6 +176,42 @@ backspace.addEventListener("click", (e) => {
     }
 })
 
-
+window.addEventListener("keyup", (e) => {
+    const { key, keyCode} = e
+    console.log(e)
+    if (keyCode >= 65 && keyCode <= 90) {
+    // Alphabet upper case
+        console.log(key)
+        mapCharToRowArray(key.toLocaleLowerCase())
+        mapHtmlToWordInput()
+    } else if (keyCode >= 97 && keyCode <= 122) {
+        // Alphabet lower case
+        console.log(key)
+        mapCharToRowArray(key)
+        mapHtmlToWordInput()
+    }
+    if(key === "Backspace") {
+        const currentRow = rowsArray[currentGameState.getAttempt()]
+        const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
+        const childDivs = wordRowContainer.getElementsByTagName('div')
+        const lastChild = childDivs[currentRow.length - 1]
+        if(lastChild) {
+            lastChild.innerHTML = ''
+            currentRow.pop()
+        } 
+    }
+    if(key === "Enter") {
+        const currentAttempt = currentGameState.getAttempt() 
+        const currentRow = rowsArray[currentGameState.getAttempt()]
+        if(currentAttempt < 5 && currentRow.length === 5) {
+            validateSubmission()
+            currentGameState.incrementAttempt()
+        } else if(currentAttempt === 5) {
+            currentGameState.gameEnd()
+        } else {
+            currentGameState.setError("Must enter a five letter word before continuing towards your next guess")
+        }
+    }
+})
 
 export { }
