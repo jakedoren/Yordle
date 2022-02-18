@@ -1,22 +1,30 @@
 const keyBoard = <HTMLElement> document.getElementById('keyboard')
 const errorDiv = <HTMLElement> document.getElementById('error')
 
-const row1: string[] = [];
-const row2: string[] = [];
-const row3: string[] = [];
-const row4: string[] = [];
-const row5: string[] = [];
-const row6: string[] = [];
+const row1: string[] = []
+const row2: string[] = []
+const row3: string[] = []
+const row4: string[] = []
+const row5: string[] = []
+const row6: string[] = []
 
 const rowsArray: Array<Array<string>> = [row1, row2, row3, row4, row5, row6]
+
+const wordsArray: string[] = ['betty', 'meggy']
 
 class gameState {
     private attempt: number
     private error: string | undefined
+    private wordOfTheDay: string
 
-    constructor(attempt: number, error?: string) {
+    constructor(attempt: number, wordOfTheDay: string, error?: string) {
         this.attempt = attempt
         this.error = error
+        this.wordOfTheDay = wordOfTheDay
+    }
+
+    getWordOfTheDay(): string {
+        return this.wordOfTheDay
     }
 
     getAttempt(): number {
@@ -55,7 +63,23 @@ class gameState {
 }
 
 const submitAttemptBtn = <HTMLElement> document.getElementById('enter')
-const currentGameState = new gameState(0)
+const currentGameState = new gameState(0, wordsArray[0])
+
+const validateSubmission = (): void => {
+    const currentRow = rowsArray[currentGameState.getAttempt()]
+    let guess = '';
+    const currentAttempt = currentGameState.getAttempt()
+    currentRow.map((letter) => {
+        guess = guess + letter
+    })
+    if(currentAttempt <= 6 && guess === currentGameState.getWordOfTheDay()) {
+        console.log("winner!")
+    } else if(currentAttempt < 6){
+        console.log("nope, try again")
+    } else {
+        console.log("Game over")
+    }
+}
 
 const mapCharToRowArray = (char: string): void => {
     const currentRow = rowsArray[currentGameState.getAttempt()]
@@ -79,6 +103,7 @@ submitAttemptBtn?.addEventListener("click", (e) => {
     const currentAttempt = currentGameState.getAttempt() 
     const currentRow = rowsArray[currentGameState.getAttempt()]
     if(currentAttempt < 5 && currentRow.length === 5) {
+        validateSubmission()
         currentGameState.incrementAttempt()
     } else if(currentAttempt === 5) {
         currentGameState.gameEnd()
@@ -90,6 +115,8 @@ submitAttemptBtn?.addEventListener("click", (e) => {
 const keyElements = keyBoard?.getElementsByTagName('span')
 if(keyElements && keyElements?.length) {
     for(let i = 0; i < keyElements?.length; i++) {
+        const currentRow = rowsArray[currentGameState.getAttempt()]
+        console.log(currentRow)
         const keyElement = keyElements[i]
         keyElement.addEventListener("click", (e) => {
             const element = <HTMLElement> e.target
