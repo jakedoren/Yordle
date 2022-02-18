@@ -103,13 +103,16 @@ if(keyElements && keyElements?.length) {
 const backspace = <HTMLElement> document.getElementById('backspace')
 backspace.addEventListener("click", (e) => {
     e.preventDefault()
-    console.log('happe')
     const currentRow = rowsArray[currentGameState.getAttempt()]
     const wordRowContainer = <HTMLElement> document.getElementById(`wordrow${currentGameState.getAttempt() + 1}`)
     const childDivs = wordRowContainer.getElementsByTagName('div')
     const lastChild = childDivs[currentRow.length - 1]
-    lastChild.innerHTML = ''
-    currentRow.pop()
+    if(lastChild) {
+        lastChild.innerHTML = ''
+        currentRow.pop()
+    }
 })
+
+
 
 export { }
