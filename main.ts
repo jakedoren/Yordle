@@ -62,6 +62,10 @@ class gameState {
 
 }
 
+window.addEventListener("load", () => {
+    console.log("page load")
+})
+
 const submitAttemptBtn = <HTMLElement> document.getElementById('enter')
 const currentGameState = new gameState(0, wordsArray[0])
 
